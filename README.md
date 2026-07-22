@@ -41,6 +41,11 @@ RetailSmart AI is a full-stack e-commerce seller management platform built with 
 ```
 RetailSmartAI/
 │
+├── .gitignore               # Git Ignore Rules (Configured to ignore secrets/node_modules)
+├── README.md                # Project Documentation
+├── package.json             # Root dependencies configuration
+├── server.js                # Root server entry point
+│
 ├── frontend/
 │   ├── login.html           # Authentication Portal
 │   ├── dashboard.html       # Seller Control Dashboard
@@ -59,10 +64,11 @@ RetailSmartAI/
 ├── backend/
 │   ├── server.js            # Express Entry Point & Static Asset Host
 │   ├── package.json         # Dependencies Config
-│   ├── .env                 # Environment Configuration
+│   ├── .env                 # Environment Configuration (Local only - gitignored)
 │   ├── testFirestore.js     # Database Connection Diagnostic Tool
 │   ├── config/
-│   │   └── firebase.js      # Firebase Admin Initialization Handler
+│   │   ├── firebase.js      # Firebase Admin Initialization Handler
+│   │   └── firebase-service-account.json # Firebase Credentials (Local only - gitignored)
 │   ├── controllers/         # Auth, Product, Inventory, Order, Payment, Return, Analytics Controllers
 │   ├── routes/              # Express API Endpoint Routes
 │   ├── middleware/          # JWT Auth Guard & Multer Image Upload Config
@@ -72,7 +78,7 @@ RetailSmartAI/
 ├── database/
 │   └── seedFirestore.js     # Automated Firestore Mock Data Seeder Script
 │
-└── uploads/                 # Product Image Files Storage Directory
+└── uploads/                 # Product Image Files Directory (Local only - gitignored)
 ```
 
 ---
