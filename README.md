@@ -1,10 +1,10 @@
-# RetailSmart AI – Intelligent Retail & E-Commerce Seller Management Platform
+## RetailSmart – Retail & E-Commerce Seller Management Platform
 
-RetailSmart is a full-stack web application designed for **shop owners and e-commerce sellers** to efficiently manage their daily business operations from a single platform. It provides a centralized dashboard where sellers can manage products, monitor inventory, process customer orders, track payments, handle returns, and analyze sales performance.
+RetailSmart is a full-stack web application designed **only for verified shop owners and e-commerce sellers**. Users must **register using their official work/business email** to access the platform, ensuring that only genuine businesses can use it.
 
-Built with **Node.js**, **Express.js**, **Firebase Firestore**, and a modern **Bootstrap 5 / Chart.js** frontend, RetailSmart offers a secure, user-friendly, and scalable solution for retail business management. The platform helps sellers streamline operations, reduce manual work, and make informed business decisions through real-time analytics and organized data management.
+After registration, shop owners can **add their shop's products**, manage inventory, track customer orders, monitor payments, handle returns, and view sales reports from a single dashboard.
 
-Whether running a local retail shop or an online store, RetailSmart simplifies store management by bringing all essential business functions together in one easy-to-use platform.
+Built with **Node.js**, **Express.js**, **Firebase Firestore**, **Bootstrap 5**, and **Chart.js**, RetailSmart provides a secure, simple, and user-friendly solution for managing retail businesses. It helps shop owners organize their daily operations, save time, and manage their stores efficiently.
 
 ---
 
