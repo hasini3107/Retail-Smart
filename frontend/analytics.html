@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RetailSmart Platform - Analytics & Reports</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Sidebar Navigation -->
+    <div class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon-box">
+          <i class="bi bi-shop-window"></i>
+        </div>
+        <div class="sidebar-logo">Retail<span>Smart</span></div>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-menu-item"><a href="dashboard.html"><i class="bi bi-grid-fill"></i> Dashboard</a></li>
+        <li class="sidebar-menu-item"><a href="products.html"><i class="bi bi-box-seam-fill"></i> Products</a></li>
+        <li class="sidebar-menu-item"><a href="inventory.html"><i class="bi bi-archive-fill"></i> Inventory</a></li>
+        <li class="sidebar-menu-item"><a href="orders.html"><i class="bi bi-receipt-cutoff"></i> Orders</a></li>
+        <li class="sidebar-menu-item"><a href="payments.html"><i class="bi bi-credit-card-fill"></i> Payments</a></li>
+        <li class="sidebar-menu-item"><a href="returns.html"><i class="bi bi-arrow-counterclockwise"></i> Returns</a></li>
+        <li class="sidebar-menu-item active"><a href="analytics.html"><i class="bi bi-bar-chart-line-fill"></i> Analytics</a></li>
+        <li class="sidebar-menu-item"><a href="profile.html"><i class="bi bi-gear-fill"></i> Settings</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="seller-profile-snippet mb-3">
+          <div class="seller-avatar" id="sidebar-seller-avatar">S</div>
+          <div class="seller-info-text">
+            <div class="seller-name-snippet" id="sidebar-seller-name">Loading...</div>
+            <div class="seller-email-snippet" id="sidebar-seller-email">loading...</div>
+          </div>
+        </div>
+        <button class="btn btn-outline-danger btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2" onclick="handleLogout()">
+          <i class="bi bi-box-arrow-right"></i> Log Out
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="app-content">
+      <!-- Executive Top Bar -->
+      <div class="app-topbar">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-outline-light d-lg-none" onclick="toggleSidebar()"><i class="bi bi-list fs-5"></i></button>
+          <div class="topbar-title-section">
+            <h2>Sales Reports & Performance Analytics</h2>
+            <p class="mb-0">Detailed statistical trends, charts, and product velocities</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Area -->
+      <div class="row g-4 mb-5">
+        <!-- Monthly Revenue Chart -->
+        <div class="col-12 col-xl-6">
+          <div class="rs-card">
+            <div class="rs-card-header">
+              <span class="rs-card-title"><i class="bi bi-graph-up-arrow text-indigo"></i> Monthly Revenue Trends</span>
+            </div>
+            <div class="rs-card-body">
+              <div style="height: 310px;"><canvas id="chart-monthly-revenue"></canvas></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Daily Sales Volume Chart -->
+        <div class="col-12 col-xl-6">
+          <div class="rs-card">
+            <div class="rs-card-header">
+              <span class="rs-card-title" style="color:var(--accent-cyan);"><i class="bi bi-bar-chart-steps"></i> Daily Sales Velocity</span>
+            </div>
+            <div class="rs-card-body">
+              <div style="height: 310px;"><canvas id="chart-daily-velocity"></canvas></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Product Performance Lists Row -->
+      <div class="row g-4 mb-0">
+        <!-- Best Selling -->
+        <div class="col-12 col-lg-6">
+          <div class="rs-card mb-0">
+            <div class="rs-card-header">
+              <span class="rs-card-title text-emerald" style="color:var(--accent-emerald);"><i class="bi bi-arrow-up-circle-fill me-2"></i>Best Selling Products</span>
+            </div>
+            <div class="rs-card-body p-0">
+              <div class="rs-table-container">
+                <table class="rs-table">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Unit Price</th>
+                      <th class="text-end">Units Sold</th>
+                    </tr>
+                  </thead>
+                  <tbody id="best-sellers-list">
+                    <tr>
+                      <td colspan="3" class="text-center py-4 text-sub">Analyzing purchase logs...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Least Selling / Low Velocity -->
+        <div class="col-12 col-lg-6">
+          <div class="rs-card mb-0">
+            <div class="rs-card-header">
+              <span class="rs-card-title text-amber" style="color:var(--accent-amber);"><i class="bi bi-arrow-down-circle-fill me-2"></i>Low Velocity Products</span>
+            </div>
+            <div class="rs-card-body p-0">
+              <div class="rs-table-container">
+                <table class="rs-table">
+                  <thead>
+                    <tr>
+                      <th>Product</th>
+                      <th>Unit Price</th>
+                      <th class="text-end">Units Sold</th>
+                    </tr>
+                  </thead>
+                  <tbody id="least-sellers-list">
+                    <tr>
+                      <td colspan="3" class="text-center py-4 text-sub">Analyzing inventory speed...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toasts -->
+  <div class="rs-toast-container"></div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Main utilities -->
+  <script src="js/main.js"></script>
+
+  <script>
+    let monthlyChart = null;
+    let dailyChart = null;
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchAnalyticsData();
+    });
+
+    async function fetchAnalyticsData() {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/analytics/dashboard`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          const { monthly_sales, daily_sales, best_sellers } = result.analytics;
+
+          renderCharts(monthly_sales, daily_sales);
+          renderProductPerformers(best_sellers);
+        } else {
+          showToast('Failed to load report parameters.', 'danger');
+        }
+      } catch (error) {
+        console.error('Analytics load error:', error);
+        showToast('Error connecting to analytics database.', 'danger');
+      }
+    }
+
+    function renderCharts(monthlySales, dailySales) {
+      // 1. Monthly Revenue Chart (Line Chart)
+      const ctxMonthly = document.getElementById('chart-monthly-revenue').getContext('2d');
+      const monthlyLabels = monthlySales.map(s => {
+        const [year, month] = s.month.split('-');
+        const date = new Date(year, month - 1);
+        return date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+      });
+      const monthlyValues = monthlySales.map(s => s.sales);
+
+      const gradMonthly = ctxMonthly.createLinearGradient(0, 0, 0, 300);
+      gradMonthly.addColorStop(0, 'rgba(79, 70, 229, 0.25)');
+      gradMonthly.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
+
+      if (monthlyChart) monthlyChart.destroy();
+      
+      monthlyChart = new Chart(ctxMonthly, {
+        type: 'line',
+        data: {
+          labels: monthlyLabels,
+          datasets: [{
+            label: 'Monthly Earnings (₹)',
+            data: monthlyValues,
+            fill: true,
+            backgroundColor: gradMonthly,
+            borderColor: '#4f46e5',
+            borderWidth: 3,
+            pointBackgroundColor: '#0284c7',
+            pointBorderColor: '#fff',
+            pointRadius: 6,
+            pointHoverRadius: 8,
+            tension: 0.35
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { backgroundColor: '#0f172a', padding: 12 }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: '#64748b' } },
+            y: { grid: { color: 'rgba(0, 0, 0, 0.05)' }, ticks: { color: '#64748b' } }
+          }
+        }
+      });
+
+      // 2. Daily Sales Velocity Chart (Bar Chart)
+      const ctxDaily = document.getElementById('chart-daily-velocity').getContext('2d');
+      const dailyLabels = dailySales.map(s => {
+        const date = new Date(s.date + 'T00:00:00');
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      });
+      const dailyValues = dailySales.map(s => s.sales);
+
+      const gradDaily = ctxDaily.createLinearGradient(0, 0, 0, 300);
+      gradDaily.addColorStop(0, 'rgba(2, 132, 199, 0.8)');
+      gradDaily.addColorStop(1, 'rgba(37, 99, 235, 0.2)');
+
+      if (dailyChart) dailyChart.destroy();
+
+      dailyChart = new Chart(ctxDaily, {
+        type: 'bar',
+        data: {
+          labels: dailyLabels,
+          datasets: [{
+            label: 'Daily Sales Value (₹)',
+            data: dailyValues,
+            backgroundColor: gradDaily,
+            borderColor: '#0284c7',
+            borderWidth: 1,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: { backgroundColor: '#0f172a', padding: 12 }
+          },
+          scales: {
+            x: { grid: { display: false }, ticks: { color: '#64748b' } },
+            y: { grid: { color: 'rgba(0, 0, 0, 0.05)' }, ticks: { color: '#64748b' } }
+          }
+        }
+      });
+    }
+
+    async function renderProductPerformers(bestSellers) {
+      const bestBody = document.getElementById('best-sellers-list');
+      bestBody.innerHTML = '';
+
+      if (bestSellers.length > 0) {
+        bestSellers.forEach(p => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>
+              <div class="d-flex align-items-center gap-3">
+                <img src="${p.image_url ? p.image_url : 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=80&q=80'}" alt="" class="product-img-thumbnail" style="width:40px; height:40px;">
+                <div class="fw-bold text-main">${p.name}</div>
+              </div>
+            </td>
+            <td class="text-sub">₹${p.price.toFixed(2)}</td>
+            <td class="text-end fw-bold text-emerald" style="color:var(--accent-emerald);">${p.quantity_sold} units</td>
+          `;
+          bestBody.appendChild(row);
+        });
+      } else {
+        bestBody.innerHTML = `<tr><td colspan="3" class="text-center py-4 text-sub">No purchase analytics logged.</td></tr>`;
+      }
+
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/products`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        
+        const result = await response.json();
+        const leastBody = document.getElementById('least-sellers-list');
+        leastBody.innerHTML = '';
+
+        if (result.success) {
+          const products = result.products;
+          
+          const soldMap = {};
+          bestSellers.forEach(b => {
+            soldMap[b.product_id] = b.quantity_sold;
+          });
+
+          const performanceList = products.map(p => ({
+            id: p.id,
+            name: p.name,
+            price: p.price,
+            image_url: p.image_url,
+            quantity_sold: soldMap[p.id] || 0
+          }));
+
+          performanceList.sort((a, b) => a.quantity_sold - b.quantity_sold);
+          const leastSellers = performanceList.slice(0, 5);
+
+          leastSellers.forEach(p => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>
+                <div class="d-flex align-items-center gap-3">
+                  <img src="${p.image_url ? p.image_url : 'https://images.unsplash.com/photo-1531403009284-440f080d1e12?auto=format&fit=crop&w=80&q=80'}" alt="" class="product-img-thumbnail" style="width:40px; height:40px;">
+                  <div class="fw-bold text-main">${p.name}</div>
+                </div>
+              </td>
+              <td class="text-sub">₹${p.price.toFixed(2)}</td>
+              <td class="text-end fw-bold" style="color:var(--accent-amber);">${p.quantity_sold} units</td>
+            `;
+            leastBody.appendChild(row);
+          });
+        }
+      } catch (error) {
+        console.error('Least performers load error:', error);
+      }
+    }
+  </script>
+</body>
+</html>

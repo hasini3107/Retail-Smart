@@ -1,0 +1,14 @@
+{
+  "name": "retailhub",
+  "version": "1.0.0",
+  "description": "RetailSmart Platform - E-Commerce & Retail Management Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js",
+    "seed": "node database/seedFirestore.js"
+  },
+  "keywords": ["retail", "ecommerce", "firestore"],
+  "author": "RetailSmart",
+  "license": "ISC"
+}

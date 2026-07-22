@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RetailSmart Platform - Payments & Billing</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .metric-card-interactive {
+      cursor: pointer;
+    }
+    .metric-card-interactive:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent-indigo);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Sidebar Navigation -->
+    <div class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon-box">
+          <i class="bi bi-shop-window"></i>
+        </div>
+        <div class="sidebar-logo">Retail<span>Smart</span></div>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-menu-item"><a href="dashboard.html"><i class="bi bi-grid-fill"></i> Dashboard</a></li>
+        <li class="sidebar-menu-item"><a href="products.html"><i class="bi bi-box-seam-fill"></i> Products</a></li>
+        <li class="sidebar-menu-item"><a href="inventory.html"><i class="bi bi-archive-fill"></i> Inventory</a></li>
+        <li class="sidebar-menu-item"><a href="orders.html"><i class="bi bi-receipt-cutoff"></i> Orders</a></li>
+        <li class="sidebar-menu-item active"><a href="payments.html"><i class="bi bi-credit-card-fill"></i> Payments</a></li>
+        <li class="sidebar-menu-item"><a href="returns.html"><i class="bi bi-arrow-counterclockwise"></i> Returns</a></li>
+        <li class="sidebar-menu-item"><a href="analytics.html"><i class="bi bi-bar-chart-line-fill"></i> Analytics</a></li>
+        <li class="sidebar-menu-item"><a href="profile.html"><i class="bi bi-gear-fill"></i> Settings</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="seller-profile-snippet mb-3">
+          <div class="seller-avatar" id="sidebar-seller-avatar">S</div>
+          <div class="seller-info-text">
+            <div class="seller-name-snippet" id="sidebar-seller-name">Loading...</div>
+            <div class="seller-email-snippet" id="sidebar-seller-email">loading...</div>
+          </div>
+        </div>
+        <button class="btn btn-outline-danger btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2" onclick="handleLogout()">
+          <i class="bi bi-box-arrow-right"></i> Log Out
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="app-content">
+      <!-- Executive Top Bar -->
+      <div class="app-topbar">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-outline-light d-lg-none" onclick="toggleSidebar()"><i class="bi bi-list fs-5"></i></button>
+          <div class="topbar-title-section">
+            <h2>Payments & Financial Billing</h2>
+            <p class="mb-0">Review invoice transactions, payouts, and revenue streams</p>
+          </div>
+        </div>
+
+        <button class="btn btn-premium" data-bs-toggle="modal" data-bs-target="#modal-record-payment">
+          <i class="bi bi-cash-coin"></i> Record Payment
+        </button>
+      </div>
+
+      <!-- Financial Summaries Row (Interactive Metric Cards) -->
+      <div class="row g-4 mb-5">
+        <!-- Revenue Card (Interactive) -->
+        <div class="col-12 col-md-4">
+          <div class="metric-card metric-card-interactive" onclick="openCompletedRevenueModal()">
+            <div class="metric-card-content">
+              <div>
+                <div class="metric-title d-flex align-items-center gap-1">TOTAL EARNINGS <i class="bi bi-arrow-up-right-circle text-sub" style="font-size:0.75rem;"></i></div>
+                <div class="metric-value text-emerald" style="color:var(--accent-emerald);" id="billing-revenue">₹0.00</div>
+              </div>
+              <div class="metric-icon-wrapper" style="color:var(--accent-emerald); background:rgba(16, 185, 129, 0.1);">
+                <i class="bi bi-cash-stack"></i>
+              </div>
+            </div>
+            <div class="small text-sub mt-2" style="font-size:0.75rem;">💡 Click for completed earnings breakdown</div>
+          </div>
+        </div>
+
+        <!-- Pending Payouts Card (Interactive) -->
+        <div class="col-12 col-md-4">
+          <div class="metric-card metric-card-interactive" onclick="openPendingPayoutsModal()">
+            <div class="metric-card-content">
+              <div>
+                <div class="metric-title d-flex align-items-center gap-1">PENDING PAYOUTS <i class="bi bi-arrow-up-right-circle text-sub" style="font-size:0.75rem;"></i></div>
+                <div class="metric-value" style="color:var(--accent-amber);" id="billing-pending">₹0.00</div>
+              </div>
+              <div class="metric-icon-wrapper" style="color:var(--accent-amber); background:rgba(245, 158, 11, 0.1);">
+                <i class="bi bi-clock-history"></i>
+              </div>
+            </div>
+            <div class="small text-sub mt-2" style="font-size:0.75rem;">💡 Click for pending payouts list</div>
+          </div>
+        </div>
+
+        <!-- Transaction Volume Card (Interactive) -->
+        <div class="col-12 col-md-4">
+          <div class="metric-card metric-card-interactive" onclick="openVolumeModal()">
+            <div class="metric-card-content">
+              <div>
+                <div class="metric-title d-flex align-items-center gap-1">TRANSACTION VOLUME <i class="bi bi-arrow-up-right-circle text-sub" style="font-size:0.75rem;"></i></div>
+                <div class="metric-value" id="billing-volume">0 logs</div>
+              </div>
+              <div class="metric-icon-wrapper" style="color:var(--accent-cyan);">
+                <i class="bi bi-activity"></i>
+              </div>
+            </div>
+            <div class="small text-sub mt-2" style="font-size:0.75rem;">💡 Click for payment status volume</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payouts/Ledger Table -->
+      <div class="rs-card mb-0">
+        <div class="rs-card-header">
+          <span class="rs-card-title"><i class="bi bi-file-earmark-spreadsheet-fill text-indigo"></i> Transaction Ledger</span>
+        </div>
+        <div class="rs-card-body p-0">
+          <div class="rs-table-container">
+            <table class="rs-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Order Reference</th>
+                  <th>Payment Method</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Date & Time</th>
+                </tr>
+              </thead>
+              <tbody id="billing-table-body">
+                <tr>
+                  <td colspan="6" class="text-center py-5 text-sub">
+                    <div class="spinner-border text-indigo mb-3" role="status" style="color:var(--accent-indigo);"></div>
+                    <div>Loading payment transactions...</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Record Payment Modal -->
+  <div class="modal fade" id="modal-record-payment" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content modal-content-premium text-main">
+        <div class="modal-header modal-header-premium">
+          <h5 class="modal-title fw-bold"><i class="bi bi-cash-coin text-indigo me-2"></i>Record New Payment</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form onsubmit="submitPayment(event)">
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label for="pay-order-select" class="form-label small text-sub fw-semibold">Select Customer Order *</label>
+              <select id="pay-order-select" class="form-select form-control-premium" required>
+                <option value="">-- Choose Order --</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="pay-amount" class="form-label small text-sub fw-semibold">Payment Amount (₹) *</label>
+              <input type="number" step="0.01" min="0" id="pay-amount" class="form-control form-control-premium" required>
+            </div>
+            <div class="mb-3">
+              <label for="pay-method" class="form-label small text-sub fw-semibold">Payment Method *</label>
+              <select id="pay-method" class="form-select form-control-premium" required>
+                <option value="Credit Card">Credit Card</option>
+                <option value="PayPal">PayPal</option>
+                <option value="Bank Transfer">Bank Transfer</option>
+                <option value="UPI / Cash">UPI / Cash</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="pay-status" class="form-label small text-sub fw-semibold">Payment Status *</label>
+              <select id="pay-status" class="form-select form-control-premium" required>
+                <option value="Completed">Completed</option>
+                <option value="Pending">Pending</option>
+                <option value="Failed">Failed</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer modal-footer-premium">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-premium">Record Transaction</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 1: Completed Earnings Detail Modal -->
+  <div class="modal fade" id="modal-completed-earnings" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content modal-content-premium text-main">
+        <div class="modal-header modal-header-premium">
+          <h5 class="modal-title fw-bold text-emerald" style="color:var(--accent-emerald);"><i class="bi bi-cash-stack me-2"></i>Total Completed Earnings Breakdown</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="p-3 rounded-3 border bg-light mb-4 d-flex justify-content-between align-items-center">
+            <div>
+              <div class="text-sub small fw-bold">TOTAL COMPLETED REVENUE</div>
+              <div class="fs-2 fw-bold text-emerald" style="color:var(--accent-emerald);" id="modal-completed-rev-val">₹0.00</div>
+            </div>
+            <span class="badge bg-success px-3 py-2 fs-6">Cleared Funds</span>
+          </div>
+
+          <h6 class="fw-bold mb-3">Completed Payment Transactions</h6>
+          <div class="rs-table-container border rounded-3">
+            <table class="rs-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Order Reference</th>
+                  <th>Method</th>
+                  <th>Amount</th>
+                  <th>Date & Time</th>
+                </tr>
+              </thead>
+              <tbody id="modal-completed-table-body">
+                <tr><td colspan="5" class="text-center py-4 text-sub">Loading cleared payments...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer modal-footer-premium">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Pending Payouts Detail Modal -->
+  <div class="modal fade" id="modal-pending-payouts" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content modal-content-premium text-main">
+        <div class="modal-header modal-header-premium">
+          <h5 class="modal-title fw-bold text-amber" style="color:var(--accent-amber);"><i class="bi bi-clock-history me-2"></i>Pending Payouts & Uncleared Invoices</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="p-3 rounded-3 border bg-light mb-4 d-flex justify-content-between align-items-center">
+            <div>
+              <div class="text-sub small fw-bold">TOTAL PENDING AMOUNT</div>
+              <div class="fs-2 fw-bold text-amber" style="color:var(--accent-amber);" id="modal-pending-val">₹0.00</div>
+            </div>
+            <span class="badge bg-warning text-dark px-3 py-2 fs-6">Awaiting Settlement</span>
+          </div>
+
+          <h6 class="fw-bold mb-3">Pending Payment Invoices</h6>
+          <div class="rs-table-container border rounded-3">
+            <table class="rs-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Order Reference</th>
+                  <th>Method</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="modal-pending-table-body">
+                <tr><td colspan="5" class="text-center py-4 text-sub">Loading pending invoices...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer modal-footer-premium">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Transaction Volume Breakdown Modal -->
+  <div class="modal fade" id="modal-volume-breakdown" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content modal-content-premium text-main">
+        <div class="modal-header modal-header-premium">
+          <h5 class="modal-title fw-bold"><i class="bi bi-activity text-cyan me-2" style="color:var(--accent-cyan);"></i>Transaction Volume & Status Distribution</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row g-3 mb-4">
+            <div class="col-4 text-center p-3 rounded-3 border bg-light">
+              <div class="text-sub small fw-bold">COMPLETED</div>
+              <div class="fs-4 fw-bold text-emerald" style="color:var(--accent-emerald);" id="vol-cnt-completed">0</div>
+            </div>
+            <div class="col-4 text-center p-3 rounded-3 border bg-light">
+              <div class="text-sub small fw-bold">PENDING</div>
+              <div class="fs-4 fw-bold text-amber" style="color:var(--accent-amber);" id="vol-cnt-pending">0</div>
+            </div>
+            <div class="col-4 text-center p-3 rounded-3 border bg-light">
+              <div class="text-sub small fw-bold">FAILED</div>
+              <div class="fs-4 fw-bold text-rose" style="color:var(--accent-rose);" id="vol-cnt-failed">0</div>
+            </div>
+          </div>
+
+          <h6 class="fw-bold mb-3">Complete Payment Log Activity</h6>
+          <div class="rs-table-container border rounded-3">
+            <table class="rs-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Order Reference</th>
+                  <th>Method</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="modal-volume-table-body">
+                <tr><td colspan="5" class="text-center py-4 text-sub">Loading volume records...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer modal-footer-premium">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="rs-toast-container"></div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Main Common Utilities -->
+  <script src="js/main.js"></script>
+
+  <script>
+    let cachedPayments = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchBillingSummary();
+      fetchTransactions();
+      populateOrdersDropdown();
+    });
+
+    async function fetchBillingSummary() {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/payments/summary`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          const { total_revenue, pending_payments, transaction_count } = result.summary;
+          
+          document.getElementById('billing-revenue').textContent = `₹${total_revenue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          document.getElementById('billing-pending').textContent = `₹${pending_payments.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          document.getElementById('billing-volume').textContent = `${transaction_count} logs`;
+        }
+      } catch (error) {
+        console.error('Summary fetch error:', error);
+      }
+    }
+
+    async function fetchTransactions() {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/payments`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const result = await response.json();
+        const tableBody = document.getElementById('billing-table-body');
+        tableBody.innerHTML = '';
+
+        if (result.success && result.payments.length > 0) {
+          cachedPayments = result.payments;
+          result.payments.forEach(pay => {
+            const row = document.createElement('tr');
+            
+            const txnId = pay.transaction_id || `TXN-GEN-${pay.id.substring(0, 8).toUpperCase()}`;
+            const orderRef = `#ORD-${pay.order_id.substring(0, 8).toUpperCase()}`;
+            const dateStr = new Date(pay.created_at).toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute:'2-digit' });
+            const statusBadge = `<span class="badge-status ${pay.status.toLowerCase()}">${pay.status}</span>`;
+
+            row.innerHTML = `
+              <td class="fw-bold text-main" style="font-family:monospace;">${txnId}</td>
+              <td class="text-sub" style="font-family:monospace;">${orderRef}</td>
+              <td><i class="bi bi-credit-card text-sub me-2"></i>${pay.payment_method}</td>
+              <td class="fw-bold text-main">₹${pay.amount.toFixed(2)}</td>
+              <td>${statusBadge}</td>
+              <td class="text-sub" style="font-size:0.85rem;">${dateStr}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+        } else {
+          tableBody.innerHTML = `
+            <tr>
+              <td colspan="6" class="text-center py-5 text-sub">No payment transactions recorded.</td>
+            </tr>
+          `;
+        }
+      } catch (error) {
+        console.error('Transactions fetch error:', error);
+      }
+    }
+
+    async function populateOrdersDropdown() {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/orders`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const result = await response.json();
+        
+        if (result.success) {
+          const select = document.getElementById('pay-order-select');
+          select.innerHTML = '<option value="">-- Choose Order --</option>';
+          result.orders.forEach(o => {
+            const opt = document.createElement('option');
+            opt.value = o.id;
+            opt.textContent = `#ORD-${o.id.substring(0, 8).toUpperCase()} - ${o.customer_name} (₹${o.total_amount.toFixed(2)})`;
+            select.appendChild(opt);
+          });
+        }
+      } catch (err) {
+        console.error('Orders dropdown load error:', err);
+      }
+    }
+
+    async function submitPayment(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('token');
+
+      const payload = {
+        order_id: document.getElementById('pay-order-select').value,
+        amount: parseFloat(document.getElementById('pay-amount').value),
+        payment_method: document.getElementById('pay-method').value,
+        status: document.getElementById('pay-status').value
+      };
+
+      try {
+        const response = await fetch(`${API_BASE_URL}/payments`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          showToast('Payment recorded successfully!', 'success');
+          bootstrap.Modal.getInstance(document.getElementById('modal-record-payment')).hide();
+          fetchBillingSummary();
+          fetchTransactions();
+        } else {
+          showToast(result.message || 'Failed to record payment.', 'danger');
+        }
+      } catch (error) {
+        console.error('Record payment error:', error);
+        showToast('Server connection error.', 'danger');
+      }
+    }
+
+    // Modal Trigger Handlers for Financial Metric Cards
+    function openCompletedRevenueModal() {
+      const completedPays = cachedPayments.filter(p => p.status === 'Completed');
+      let total = 0;
+      completedPays.forEach(p => total += p.amount);
+
+      document.getElementById('modal-completed-rev-val').textContent = `₹${total.toFixed(2)}`;
+
+      const tbody = document.getElementById('modal-completed-table-body');
+      tbody.innerHTML = '';
+
+      if (completedPays.length > 0) {
+        completedPays.forEach(p => {
+          const row = document.createElement('tr');
+          const txnId = p.transaction_id || `TXN-${p.id.substring(0, 8).toUpperCase()}`;
+          const orderRef = `#ORD-${p.order_id.substring(0, 8).toUpperCase()}`;
+          const dateStr = new Date(p.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+          row.innerHTML = `
+            <td class="fw-bold text-main" style="font-family:monospace;">${txnId}</td>
+            <td class="text-sub" style="font-family:monospace;">${orderRef}</td>
+            <td>${p.payment_method}</td>
+            <td class="fw-bold text-emerald" style="color:var(--accent-emerald);">₹${p.amount.toFixed(2)}</td>
+            <td class="text-sub">${dateStr}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } else {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-sub">No completed earnings records logged.</td></tr>`;
+      }
+
+      new bootstrap.Modal(document.getElementById('modal-completed-earnings')).show();
+    }
+
+    function openPendingPayoutsModal() {
+      const pendingPays = cachedPayments.filter(p => p.status === 'Pending');
+      let total = 0;
+      pendingPays.forEach(p => total += p.amount);
+
+      document.getElementById('modal-pending-val').textContent = `₹${total.toFixed(2)}`;
+
+      const tbody = document.getElementById('modal-pending-table-body');
+      tbody.innerHTML = '';
+
+      if (pendingPays.length > 0) {
+        pendingPays.forEach(p => {
+          const row = document.createElement('tr');
+          const txnId = p.transaction_id || `TXN-${p.id.substring(0, 8).toUpperCase()}`;
+          const orderRef = `#ORD-${p.order_id.substring(0, 8).toUpperCase()}`;
+
+          row.innerHTML = `
+            <td class="fw-bold text-main" style="font-family:monospace;">${txnId}</td>
+            <td class="text-sub" style="font-family:monospace;">${orderRef}</td>
+            <td>${p.payment_method}</td>
+            <td class="fw-bold text-amber" style="color:var(--accent-amber);">₹${p.amount.toFixed(2)}</td>
+            <td><span class="badge-status pending">${p.status}</span></td>
+          `;
+          tbody.appendChild(row);
+        });
+      } else {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-sub">No pending payouts or uncleared invoices.</td></tr>`;
+      }
+
+      new bootstrap.Modal(document.getElementById('modal-pending-payouts')).show();
+    }
+
+    function openVolumeModal() {
+      let completed = 0, pending = 0, failed = 0;
+      cachedPayments.forEach(p => {
+        const s = (p.status || '').toLowerCase();
+        if (s === 'completed') completed++;
+        else if (s === 'pending') pending++;
+        else if (s === 'failed') failed++;
+      });
+
+      document.getElementById('vol-cnt-completed').textContent = completed;
+      document.getElementById('vol-cnt-pending').textContent = pending;
+      document.getElementById('vol-cnt-failed').textContent = failed;
+
+      const tbody = document.getElementById('modal-volume-table-body');
+      tbody.innerHTML = '';
+
+      if (cachedPayments.length > 0) {
+        cachedPayments.forEach(p => {
+          const row = document.createElement('tr');
+          const txnId = p.transaction_id || `TXN-${p.id.substring(0, 8).toUpperCase()}`;
+          const orderRef = `#ORD-${p.order_id.substring(0, 8).toUpperCase()}`;
+
+          row.innerHTML = `
+            <td class="fw-bold text-main" style="font-family:monospace;">${txnId}</td>
+            <td class="text-sub" style="font-family:monospace;">${orderRef}</td>
+            <td>${p.payment_method}</td>
+            <td class="fw-bold text-main">₹${p.amount.toFixed(2)}</td>
+            <td><span class="badge-status ${p.status.toLowerCase()}">${p.status}</span></td>
+          `;
+          tbody.appendChild(row);
+        });
+      } else {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-sub">No payment logs recorded.</td></tr>`;
+      }
+
+      new bootstrap.Modal(document.getElementById('modal-volume-breakdown')).show();
+    }
+  </script>
+</body>
+</html>

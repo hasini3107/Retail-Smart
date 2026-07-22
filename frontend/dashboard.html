@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="executive-light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RetailSmart Platform - Enterprise Dashboard</title>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .metric-card-interactive {
+      cursor: pointer;
+    }
+    .metric-card-interactive:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: var(--shadow-hover);
+      border-color: var(--accent-indigo);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-wrapper">
+    <!-- Sidebar Navigation -->
+    <div class="app-sidebar">
+      <div class="sidebar-header">
+        <div class="brand-icon-box">
+          <i class="bi bi-shop-window"></i>
+        </div>
+        <div class="sidebar-logo">Retail<span>Smart</span></div>
+      </div>
+      <ul class="sidebar-menu">
+        <li class="sidebar-menu-item active"><a href="dashboard.html"><i class="bi bi-grid-fill"></i> Dashboard</a></li>
+        <li class="sidebar-menu-item"><a href="products.html"><i class="bi bi-box-seam-fill"></i> Products</a></li>
+        <li class="sidebar-menu-item"><a href="inventory.html"><i class="bi bi-archive-fill"></i> Inventory</a></li>
+        <li class="sidebar-menu-item"><a href="orders.html"><i class="bi bi-receipt-cutoff"></i> Orders</a></li>
+        <li class="sidebar-menu-item"><a href="payments.html"><i class="bi bi-credit-card-fill"></i> Payments</a></li>
+        <li class="sidebar-menu-item"><a href="returns.html"><i class="bi bi-arrow-counterclockwise"></i> Returns</a></li>
+        <li class="sidebar-menu-item"><a href="analytics.html"><i class="bi bi-bar-chart-line-fill"></i> Analytics</a></li>
+        <li class="sidebar-menu-item"><a href="profile.html"><i class="bi bi-gear-fill"></i> Settings</a></li>
+      </ul>
+      <div class="sidebar-footer">
+        <div class="seller-profile-snippet mb-3">
+          <div class="seller-avatar" id="sidebar-seller-avatar">S</div>
+          <div class="seller-info-text">
+            <div class="seller-name-snippet" id="sidebar-seller-name">Loading...</div>
+            <div class="seller-email-snippet" id="sidebar-seller-email">loading...</div>
+          </div>
+        </div>
+        <button class="btn btn-outline-danger btn-sm w-100 py-2 d-flex align-items-center justify-content-center gap-2" onclick="handleLogout()">
+          <i class="bi bi-box-arrow-right"></i> Log Out
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="app-content">
+      <!-- Executive Top Bar -->
+      <div class="app-topbar">
+        <div class="d-flex align-items-center gap-3">
+          <button class="btn btn-outline-light d-lg-none" onclick="toggleSidebar()"><i class="bi bi-list fs-5"></i></button>
+          <div class="topbar-title-section">
+            <h2>Seller Management Console</h2>
+            <p class="mb-0">Real-time store metrics and operational analytics</p>
+          </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-3">
+          <!-- Live Theme Switcher Pill -->
+          <div class="theme-selector-pill">
+            <button class="theme-opt-btn active" data-theme-value="executive-light" onclick="setAppTheme('executive-light')">☀️ Light</button>
+            <button class="theme-opt-btn" data-theme-value="obsidian-dark" onclick="setAppTheme('obsidian-dark')">🌙 Dark</button>
+            <button class="theme-opt-btn" data-theme-value="emerald-luxury" onclick="setAppTheme('emerald-luxury')">💎 Emerald</button>
+          </div>
+
+
+        </div>
+      </div>
+
+      <!-- KPI Metrics Row (Interactive Cards) -->
+      <div class="row g-4 mb-5">
+        <!-- Revenue Card (Interactive) -->
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="metric-card metric-card-interactive" onclick="openRevenueModal()">
+            <div class="metric-card-content">
+              <div>
+                <div class="metric-title d-flex align-items-center gap-1">TOTAL REVENUE <i class="bi bi-arrow-up-right-circle text-sub" style="font-size:0.75rem;"></i></div>
+                <div class="metric-value text-emerald" style="color: var(--accent-emerald);" id="kpi-revenue">₹0.00</div>
+              </div>
+              <div class="metric-icon-wrapper" style="color: var(--accent-emerald);">
+                <i class="bi bi-currency-rupee"></i>
+              </div>
+            </div>
+            <div class="small text-sub mt-2" style="font-size:0.75rem;">💡 Click for revenue breakdown</div>
+          </div>
+        </div>
+
+        <!-- Orders Card (Interactive) -->
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="metric-card metric-card-interactive" onclick="openOrdersModal()">
+            <div class="metric-card-content">
+              <div>
+                <div class="metric-title d-flex align-items-center gap-1">TOTAL ORDERS <i class="bi bi-arrow-up-right-circle text-sub" style="font-size:0.75rem;"></i></div>
+                <div class="metric-value" id="kpi-orders">0</div>
+              </div>
+              <div class="metric-icon-wrapper" style="color: var(--accent-gold);">
+                <i class="bi bi-cart-check"></i>
+              </div>
+            </div>
+            <div class="small text-sub mt-2" style="font-size:0.75rem;">💡 Click for orders overview</div>
+          </div>
+        </div>
+
+        <!-- Products Card (Interactive) -->
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="metric-card metric-card-interactive" onclick="openProductsModal()">
+            <div class="metric-card-content">
+              <div>
+                <div class="metric-title d-flex align-items-center gap-1">CATALOG ITEMS <i class="bi bi-arrow-up-right-circle text-sub" style="font-size:0.75rem;"></i></div>
+                <div class="metric-value" id="kpi-products">0</div>
+              </div>
+              <div class="metric-icon-wrapper" style="color: var(--accent-blue);">
+                <i class="bi bi-box-seam"></i>
+              </div>
+            </div>
+            <div class="small text-sub mt-2" style="font-size:0.75rem;">Valuation: <strong class="text-emerald" style="color:var(--accent-emerald);" id="kpi-catalog-val">₹0.00</strong></div>
+          </div>
+        </div>
+
+        <!-- Low Stock Alerts Card (Interactive) -->
+        <div class="col-12 col-md-6 col-xl-3">
+          <div class="metric-card metric-card-interactive" id="kpi-stock-card" onclick="openLowStockModal()">
+            <div class="metric-card-content">
+              <div>
+                <div class="metric-title d-flex align-items-center gap-1">LOW STOCK ALERTS <i class="bi bi-arrow-up-right-circle text-sub" style="font-size:0.75rem;"></i></div>
+                <div class="metric-value" style="color: var(--accent-rose);" id="kpi-lowstock">0</div>
+              </div>
+              <div class="metric-icon-wrapper" style="color: var(--accent-rose); background: rgba(244, 63, 94, 0.1);">
+                <i class="bi bi-exclamation-triangle"></i>
+              </div>
+            </div>
+            <div class="small text-sub mt-2" style="font-size:0.75rem;">💡 Click for low stock alerts</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts & Stock Alerts Row -->
+      <div class="row g-4 mb-5">
+        <!-- Sales Performance Graph -->
+        <div class="col-12 col-xl-8">
+          <div class="rs-card">
+            <div class="rs-card-header">
+              <div>
+                <span class="rs-card-title"><i class="bi bi-graph-up-arrow text-emerald" style="color:var(--accent-emerald);"></i> Sales Revenue Velocity</span>
+                <div class="text-sub small">Click any bar on the graph to inspect daily order details</div>
+              </div>
+              <span class="badge bg-light text-sub border">Click bar for details</span>
+            </div>
+            <div class="rs-card-body">
+              <div style="height: 310px;"><canvas id="chart-daily-sales"></canvas></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Low Stock Warning List -->
+        <div class="col-12 col-xl-4">
+          <div class="rs-card h-100 mb-0">
+            <div class="rs-card-header">
+              <span class="rs-card-title text-rose" style="color: var(--accent-rose);"><i class="bi bi-bell-fill"></i> Low Stock Alerts</span>
+            </div>
+            <div class="rs-card-body p-0">
+              <div id="lowstock-alerts-list" class="list-group list-group-flush" style="max-height:310px; overflow-y:auto;">
+                <div class="text-center py-5 text-muted">Checking stock status...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Orders Table -->
+      <div class="rs-card mb-0">
+        <div class="rs-card-header">
+          <span class="rs-card-title"><i class="bi bi-receipt-cutoff text-emerald" style="color:var(--accent-emerald);"></i> Recent Customer Orders</span>
+          <a href="orders.html" class="btn btn-outline-premium btn-sm py-1 px-3">View Full Ledger</a>
+        </div>
+        <div class="rs-card-body p-0">
+          <div class="rs-table-container">
+            <table class="rs-table">
+              <thead>
+                <tr>
+                  <th>Order Reference</th>
+                  <th>Customer</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                  <th>Date & Time</th>
+                </tr>
+              </thead>
+              <tbody id="recent-orders-table">
+                <tr>
+                  <td colspan="5" class="text-center py-5 text-sub">Fetching order logs...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal 1: Total Revenue Breakdown Modal -->
+  <div class="modal fade" id="modal-kpi-revenue" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content modal-content-premium text-main">
+        <div class="modal-header modal-header-premium">
+          <h5 class="modal-title fw-bold"><i class="bi bi-wallet2 text-emerald me-2" style="color:var(--accent-emerald);"></i>Total Revenue & Billing Summary</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row g-3 mb-4">
+            <div class="col-12 col-md-6">
+              <div class="p-3 rounded-3 border bg-light">
+                <div class="text-sub small fw-bold">TOTAL EARNED REVENUE</div>
+                <div class="fs-2 fw-bold text-emerald" style="color:var(--accent-emerald);" id="rev-modal-total">₹0.00</div>
+              </div>
+            </div>
+            <div class="col-12 col-md-6">
+              <div class="p-3 rounded-3 border bg-light">
+                <div class="text-sub small fw-bold">COMPLETED TRANSACTIONS</div>
+                <div class="fs-2 fw-bold text-main" id="rev-modal-count">0</div>
+              </div>
+            </div>
+          </div>
+
+          <h6 class="fw-bold mb-3">Completed Customer Payments Ledger</h6>
+          <div class="rs-table-container border rounded-3">
+            <table class="rs-table">
+              <thead>
+                <tr>
+                  <th>Transaction ID</th>
+                  <th>Order Ref</th>
+                  <th>Method</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="rev-modal-table-body">
+                <tr><td colspan="5" class="text-center py-4 text-sub">Loading payment records...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer modal-footer-premium">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="payments.html" class="btn btn-premium px-4">Open Payments Ledger</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Total Orders Overview Modal -->
+  <div class="modal fade" id="modal-kpi-orders" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content modal-content-premium text-main">
+        <div class="modal-header modal-header-premium">
+          <h5 class="modal-title fw-bold"><i class="bi bi-cart-check text-gold me-2" style="color:var(--accent-gold);"></i>Total Customer Orders Overview</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3 text-center p-3 rounded-3 border bg-light">
+              <div class="text-sub small fw-bold">DELIVERED</div>
+              <div class="fs-4 fw-bold text-emerald" style="color:var(--accent-emerald);" id="orders-cnt-delivered">0</div>
+            </div>
+            <div class="col-6 col-md-3 text-center p-3 rounded-3 border bg-light">
+              <div class="text-sub small fw-bold">PROCESSING</div>
+              <div class="fs-4 fw-bold text-info" id="orders-cnt-processing">0</div>
+            </div>
+            <div class="col-6 col-md-3 text-center p-3 rounded-3 border bg-light">
+              <div class="text-sub small fw-bold">PENDING</div>
+              <div class="fs-4 fw-bold text-warning" id="orders-cnt-pending">0</div>
+            </div>
+            <div class="col-6 col-md-3 text-center p-3 rounded-3 border bg-light">
+              <div class="text-sub small fw-bold">CANCELLED</div>
+              <div class="fs-4 fw-bold text-danger" id="orders-cnt-cancelled">0</div>
+            </div>
+          </div>
+
+          <h6 class="fw-bold mb-3">All Customer Orders</h6>
+          <div class="rs-table-container border rounded-3">
+            <table class="rs-table">
+              <thead>
+                <tr>
+                  <th>Order Reference</th>
+                  <th>Customer</th>
+                  <th>Items</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="orders-modal-table-body">
+                <tr><td colspan="5" class="text-center py-4 text-sub">Loading orders list...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer modal-footer-premium">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="orders.html" class="btn btn-premium px-4">Manage Orders</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Catalog Items Quick View Modal -->
+  <div class="modal fade" id="modal-kpi-products" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content modal-content-premium text-main">
+        <div class="modal-header modal-header-premium">
+          <h5 class="modal-title fw-bold"><i class="bi bi-box-seam text-primary me-2"></i>Catalog Products Overview</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <h6 class="fw-bold mb-3">Active Products in Store Catalog</h6>
+          <div class="rs-table-container border rounded-3">
+            <table class="rs-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Unit Price</th>
+                  <th>In Stock</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="products-modal-table-body">
+                <tr><td colspan="4" class="text-center py-4 text-sub">Loading products list...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer modal-footer-premium">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="products.html" class="btn btn-premium px-4">Add / Manage Products</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 4: Low Stock Alerts Detail Modal -->
+  <div class="modal fade" id="modal-kpi-lowstock" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content modal-content-premium text-main">
+        <div class="modal-header modal-header-premium">
+          <h5 class="modal-title fw-bold text-rose" style="color:var(--accent-rose);"><i class="bi bi-exclamation-triangle-fill me-2"></i>Low Stock Inventory Warnings</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="p-3 rounded-3 border bg-light mb-4">
+            <div class="text-sub small fw-bold">CRITICAL INVENTORY ALERT</div>
+            <div class="small text-main mt-1">The following catalog items have dropped below their designated minimum threshold limits. Update stock immediately to avoid fulfillment delays.</div>
+          </div>
+
+          <div class="rs-table-container border rounded-3">
+            <table class="rs-table">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Current Stock</th>
+                  <th>Warning Threshold Limit</th>
+                  <th>Alert Level</th>
+                </tr>
+              </thead>
+              <tbody id="lowstock-modal-table-body">
+                <tr><td colspan="4" class="text-center py-4 text-sub">Checking low stock status...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer modal-footer-premium">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="inventory.html" class="btn btn-premium px-4">Update Stock in Inventory</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Daily Sales Breakdown (Triggered on Chart Click) -->
+  <div class="modal fade" id="modal-daily-sales-detail" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content modal-content-premium text-main">
+        <div class="modal-header modal-header-premium">
+          <h5 class="modal-title fw-bold" id="daily-detail-modal-title">
+            <i class="bi bi-calendar-event text-indigo me-2"></i>Daily Sales Breakdown
+          </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="d-flex justify-content-between align-items-center p-3 rounded-3 mb-4 bg-light border">
+            <div>
+              <div class="text-sub small fw-bold">TOTAL DAILY REVENUE</div>
+              <div class="fs-3 fw-bold text-emerald" style="color:var(--accent-emerald);" id="daily-detail-revenue">₹0.00</div>
+            </div>
+            <div>
+              <div class="text-sub small fw-bold">TOTAL ORDERS</div>
+              <div class="fs-3 fw-bold text-main" id="daily-detail-count">0</div>
+            </div>
+          </div>
+
+          <h6 class="fw-bold mb-3 text-main">Customer Orders Generated on this Date</h6>
+          <div class="rs-table-container border rounded-3">
+            <table class="rs-table">
+              <thead>
+                <tr>
+                  <th>Order Reference</th>
+                  <th>Customer</th>
+                  <th>Items Purchased</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="daily-detail-table-body">
+                <tr>
+                  <td colspan="5" class="text-center py-4 text-sub">Loading daily sales transactions...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer modal-footer-premium">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+          <a href="orders.html" class="btn btn-premium px-4">View All Orders</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div class="rs-toast-container"></div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- Custom Common utilities -->
+  <script src="js/main.js"></script>
+  
+  <script>
+    let dailySalesChart = null;
+    let cachedAllOrders = [];
+    let cachedAllProducts = [];
+    let cachedAllPayments = [];
+    let cachedLowStockAlerts = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchDashboardSummary();
+      fetchRecentOrders();
+      fetchPaymentsData();
+      fetchProductsData();
+    });
+
+    async function fetchDashboardSummary() {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/analytics/dashboard`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const result = await response.json();
+        if (result.success) {
+          const { metrics, daily_sales } = result.analytics;
+          
+          document.getElementById('kpi-revenue').textContent = `₹${metrics.total_revenue.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          document.getElementById('kpi-orders').textContent = metrics.total_orders;
+          document.getElementById('kpi-products').textContent = metrics.total_products;
+          if (document.getElementById('kpi-catalog-val')) {
+            document.getElementById('kpi-catalog-val').textContent = `₹${(metrics.total_catalog_valuation || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          }
+          document.getElementById('kpi-lowstock').textContent = metrics.low_stock_count;
+
+          fetchLowStockAlerts();
+          renderDailyChart(daily_sales);
+        } else {
+          showToast(result.message || 'Failed to sync stats.', 'danger');
+        }
+      } catch (error) {
+        console.error('Stats fetching error:', error);
+        showToast('Error syncing sales stats.', 'danger');
+      }
+    }
+
+    async function fetchLowStockAlerts() {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/inventory/alerts`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const result = await response.json();
+        const container = document.getElementById('lowstock-alerts-list');
+        container.innerHTML = '';
+
+        if (result.success && result.alerts.length > 0) {
+          cachedLowStockAlerts = result.alerts;
+          result.alerts.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'list-group-item bg-transparent border-bottom border-secondary d-flex justify-content-between align-items-center py-3 px-4';
+            row.innerHTML = `
+              <div>
+                <div class="fw-bold small text-main">${item.product_name}</div>
+                <div class="text-sub" style="font-size:0.75rem;">Limit: ${item.low_stock_threshold} units</div>
+              </div>
+              <span class="stock-warning-badge">${item.quantity} left</span>
+            `;
+            container.appendChild(row);
+          });
+        } else {
+          container.innerHTML = `
+            <div class="text-center py-5 text-sub">
+              <i class="bi bi-shield-check text-emerald display-6 mb-2 d-block" style="color:var(--accent-emerald);"></i>
+              <div class="small fw-semibold text-main">All inventory fully stocked</div>
+            </div>
+          `;
+        }
+      } catch (error) {
+        console.error('Alerts load error:', error);
+      }
+    }
+
+    async function fetchRecentOrders() {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/orders`, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        const result = await response.json();
+        const tableBody = document.getElementById('recent-orders-table');
+        tableBody.innerHTML = '';
+
+        if (result.success && result.orders.length > 0) {
+          cachedAllOrders = result.orders;
+          const topOrders = result.orders.slice(0, 5);
+          topOrders.forEach(order => {
+            const row = document.createElement('tr');
+            const dateStr = new Date(order.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+            
+            row.innerHTML = `
+              <td class="fw-bold text-main" style="font-family:monospace;">#ORD-${order.id.substring(0, 8).toUpperCase()}</td>
+              <td>${order.customer_name}</td>
+              <td class="fw-bold text-emerald" style="color:var(--accent-emerald);">₹${order.total_amount.toFixed(2)}</td>
+              <td><span class="badge-status ${order.status.toLowerCase()}">${order.status}</span></td>
+              <td class="text-sub">${dateStr}</td>
+            `;
+            tableBody.appendChild(row);
+          });
+        } else {
+          tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-sub">No orders recorded yet.</td></tr>`;
+        }
+      } catch (error) {
+        console.error('Recent orders load error:', error);
+      }
+    }
+
+    async function fetchPaymentsData() {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/payments`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const res = await response.json();
+        if (res.success) {
+          cachedAllPayments = res.payments;
+        }
+      } catch (err) {
+        console.error('Payments fetch error:', err);
+      }
+    }
+
+    async function fetchProductsData() {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await fetch(`${API_BASE_URL}/products`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const res = await response.json();
+        if (res.success) {
+          cachedAllProducts = res.products;
+        }
+      } catch (err) {
+        console.error('Products fetch error:', err);
+      }
+    }
+
+    // Modal Trigger Handlers for KPI Cards
+    function openRevenueModal() {
+      let total = 0;
+      const completedPays = cachedAllPayments.filter(p => p.status === 'Completed');
+      completedPays.forEach(p => total += p.amount);
+
+      document.getElementById('rev-modal-total').textContent = `₹${total.toFixed(2)}`;
+      document.getElementById('rev-modal-count').textContent = completedPays.length;
+
+      const tbody = document.getElementById('rev-modal-table-body');
+      tbody.innerHTML = '';
+
+      if (completedPays.length > 0) {
+        completedPays.forEach(p => {
+          const row = document.createElement('tr');
+          const txnId = p.transaction_id || `TXN-${p.id.substring(0, 8).toUpperCase()}`;
+          const orderRef = `#ORD-${p.order_id.substring(0, 8).toUpperCase()}`;
+          row.innerHTML = `
+            <td class="fw-bold text-main" style="font-family:monospace;">${txnId}</td>
+            <td class="text-sub" style="font-family:monospace;">${orderRef}</td>
+            <td>${p.payment_method}</td>
+            <td class="fw-bold text-emerald" style="color:var(--accent-emerald);">₹${p.amount.toFixed(2)}</td>
+            <td><span class="badge-status completed">${p.status}</span></td>
+          `;
+          tbody.appendChild(row);
+        });
+      } else {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-sub">No completed payment records logged.</td></tr>`;
+      }
+
+      new bootstrap.Modal(document.getElementById('modal-kpi-revenue')).show();
+    }
+
+    function openOrdersModal() {
+      let delivered = 0, processing = 0, pending = 0, cancelled = 0;
+      cachedAllOrders.forEach(o => {
+        const s = (o.status || '').toLowerCase();
+        if (s === 'delivered') delivered++;
+        else if (s === 'processing') processing++;
+        else if (s === 'pending') pending++;
+        else if (s === 'cancelled') cancelled++;
+      });
+
+      document.getElementById('orders-cnt-delivered').textContent = delivered;
+      document.getElementById('orders-cnt-processing').textContent = processing;
+      document.getElementById('orders-cnt-pending').textContent = pending;
+      document.getElementById('orders-cnt-cancelled').textContent = cancelled;
+
+      const tbody = document.getElementById('orders-modal-table-body');
+      tbody.innerHTML = '';
+
+      if (cachedAllOrders.length > 0) {
+        cachedAllOrders.forEach(o => {
+          const row = document.createElement('tr');
+          const orderNum = `#ORD-${o.id.substring(0, 8).toUpperCase()}`;
+          let itemsText = (o.items || []).map(i => `${i.name} (${i.quantity}x)`).join(', ');
+
+          row.innerHTML = `
+            <td class="fw-bold text-main" style="font-family:monospace;">${orderNum}</td>
+            <td>${o.customer_name}</td>
+            <td class="small text-sub">${itemsText}</td>
+            <td class="fw-bold text-emerald" style="color:var(--accent-emerald);">₹${o.total_amount.toFixed(2)}</td>
+            <td><span class="badge-status ${o.status.toLowerCase()}">${o.status}</span></td>
+          `;
+          tbody.appendChild(row);
+        });
+      } else {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-sub">No customer orders recorded yet.</td></tr>`;
+      }
+
+      new bootstrap.Modal(document.getElementById('modal-kpi-orders')).show();
+    }
+
+    function openProductsModal() {
+      const tbody = document.getElementById('products-modal-table-body');
+      tbody.innerHTML = '';
+
+      if (cachedAllProducts.length > 0) {
+        cachedAllProducts.forEach(p => {
+          const row = document.createElement('tr');
+          const isLow = p.quantity <= (p.low_stock_threshold || 10);
+            const imgSrc = formatImageUrl(p.image_url);
+            row.innerHTML = `
+              <td>
+                <div class="d-flex align-items-center gap-3">
+                  <img src="${imgSrc}" onerror="${DEFAULT_IMAGE_FALLBACK}" class="product-img-thumbnail" style="width:36px; height:36px;">
+                  <div class="fw-bold text-main">${p.name}</div>
+                </div>
+              </td>
+            <td class="fw-bold text-emerald" style="color:var(--accent-emerald);">₹${p.price.toFixed(2)}</td>
+            <td class="fw-bold text-main">${p.quantity} units</td>
+            <td><span class="badge-status ${isLow ? 'low' : 'healthy'}">${isLow ? 'Low Stock' : 'In Stock'}</span></td>
+          `;
+          tbody.appendChild(row);
+        });
+      } else {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-sub">No items in store catalog.</td></tr>`;
+      }
+
+      new bootstrap.Modal(document.getElementById('modal-kpi-products')).show();
+    }
+
+    function openLowStockModal() {
+      const tbody = document.getElementById('lowstock-modal-table-body');
+      tbody.innerHTML = '';
+
+      if (cachedLowStockAlerts.length > 0) {
+        cachedLowStockAlerts.forEach(item => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td class="fw-bold text-main">${item.product_name}</td>
+            <td class="fw-bold text-rose" style="color:var(--accent-rose);">${item.quantity} units left</td>
+            <td class="text-sub">${item.low_stock_threshold} units limit</td>
+            <td><span class="stock-warning-badge">CRITICAL REORDER</span></td>
+          `;
+          tbody.appendChild(row);
+        });
+      } else {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="4" class="text-center py-4 text-emerald" style="color:var(--accent-emerald);">
+              <i class="bi bi-check-circle-fill me-2"></i>All inventory levels are currently fully stocked.
+            </td>
+          </tr>
+        `;
+      }
+
+      new bootstrap.Modal(document.getElementById('modal-kpi-lowstock')).show();
+    }
+
+    function renderDailyChart(dailySales) {
+      const ctx = document.getElementById('chart-daily-sales').getContext('2d');
+      
+      const labels = dailySales.map(s => {
+        const date = new Date(s.date + 'T00:00:00');
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      });
+      const dataValues = dailySales.map(s => s.sales);
+
+      // Create rich gradient background
+      const gradient = ctx.createLinearGradient(0, 0, 0, 300);
+      gradient.addColorStop(0, 'rgba(16, 185, 129, 0.85)');
+      gradient.addColorStop(1, 'rgba(245, 158, 11, 0.2)');
+
+      if (dailySalesChart) {
+        dailySalesChart.destroy();
+      }
+
+      dailySalesChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Sales Revenue (₹)',
+            data: dataValues,
+            backgroundColor: gradient,
+            borderColor: '#10b981',
+            borderWidth: 1,
+            borderRadius: 8,
+            hoverBackgroundColor: '#f59e0b'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          onClick: (evt, activeElements) => {
+            if (activeElements.length > 0) {
+              const idx = activeElements[0].index;
+              const dateString = dailySales[idx].date;
+              const formattedLabel = labels[idx];
+              const revenueVal = dailySales[idx].sales;
+              openDailySalesDetailModal(dateString, formattedLabel, revenueVal);
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: '#0f172a',
+              titleColor: '#fff',
+              bodyColor: '#a7f3d0',
+              borderColor: 'rgba(16, 185, 129, 0.3)',
+              borderWidth: 1,
+              padding: 12,
+              displayColors: false,
+              callbacks: {
+                footer: () => '💡 Click bar for order details'
+              }
+            }
+          },
+          scales: {
+            x: {
+              grid: { display: false },
+              ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans', size: 11 } }
+            },
+            y: {
+              grid: { color: 'rgba(0, 0, 0, 0.05)' },
+              ticks: { color: '#64748b', font: { family: 'Plus Jakarta Sans', size: 11 } }
+            }
+          }
+        }
+      });
+    }
+
+    function openDailySalesDetailModal(dateString, formattedLabel, revenueVal) {
+      document.getElementById('daily-detail-modal-title').innerHTML = `<i class="bi bi-calendar-event text-indigo me-2"></i>Sales Breakdown for ${formattedLabel}`;
+      document.getElementById('daily-detail-revenue').textContent = `₹${revenueVal.toFixed(2)}`;
+
+      const matchingOrders = cachedAllOrders.filter(o => {
+        const oDateStr = new Date(o.created_at).toISOString().split('T')[0];
+        return oDateStr === dateString;
+      });
+
+      document.getElementById('daily-detail-count').textContent = matchingOrders.length;
+
+      const tbody = document.getElementById('daily-detail-table-body');
+      tbody.innerHTML = '';
+
+      if (matchingOrders.length > 0) {
+        matchingOrders.forEach(o => {
+          const row = document.createElement('tr');
+          const orderNum = `#ORD-${o.id.substring(0, 8).toUpperCase()}`;
+
+          let itemsText = (o.items || []).map(i => `${i.name} (${i.quantity}x)`).join(', ');
+
+          row.innerHTML = `
+            <td class="fw-bold text-main" style="font-family:monospace;">${orderNum}</td>
+            <td>${o.customer_name}</td>
+            <td class="small text-sub">${itemsText}</td>
+            <td class="fw-bold text-emerald" style="color:var(--accent-emerald);">₹${o.total_amount.toFixed(2)}</td>
+            <td><span class="badge-status ${o.status.toLowerCase()}">${o.status}</span></td>
+          `;
+          tbody.appendChild(row);
+        });
+      } else {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="text-center py-4 text-sub">
+              No individual customer order records logged for this date.
+            </td>
+          </tr>
+        `;
+      }
+
+      const modalElem = new bootstrap.Modal(document.getElementById('modal-daily-sales-detail'));
+      modalElem.show();
+    }
+  </script>
+</body>
+</html>
