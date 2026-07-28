@@ -1,5 +1,7 @@
 // Shared Client Utilities and Auth Guard for RetailSmart Platform
-const API_BASE_URL = 'http://localhost:5000/api';
+const API_BASE_URL = (window.location.origin && window.location.origin !== 'null' && !window.location.origin.startsWith('file://'))
+  ? `${window.location.origin}/api`
+  : 'http://localhost:5000/api';
 
 // Image URL Formatter Helper
 function formatImageUrl(url) {
@@ -9,7 +11,10 @@ function formatImageUrl(url) {
     return url;
   }
   const cleanPath = url.startsWith('/') ? url.substring(1) : url;
-  return `http://localhost:5000/${cleanPath}`;
+  const origin = (window.location.origin && window.location.origin !== 'null' && !window.location.origin.startsWith('file://'))
+    ? window.location.origin
+    : 'http://localhost:5000';
+  return `${origin}/${cleanPath}`;
 }
 
 const DEFAULT_IMAGE_FALLBACK = "this.onerror=null; this.src='https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=400&q=80';";
