@@ -95,14 +95,7 @@ Access the application in your browser at:
 
 ---
 
-## Default Test Credentials
 
-Use these pre-configured credentials to log in:
-
-- **Email**: `demo@retailsmart.com`
-- **Password**: `password123`
-
----
 
 ## API Endpoint Reference
 
