@@ -1,6 +1,6 @@
 ## RetailSmart – Retail & E-Commerce Seller Management Platform
 
-RetailSmart is a full-stack web application designed **only for verified shop owners and e-commerce sellers**. Users must **register using their official work/business email** to access the platform, ensuring that only genuine businesses can use it.
+RetailSmart is a full-stack web application designed **RetailSmart is a full-stack seller management platform designed for shop owners and e-commerce sellers. Authenticated sellers can manage their products, inventory, orders, payments, returns, and sales analytics from a centralized dashboard.**. Users must **register using their official work/business email** to access the platform, ensuring that only genuine businesses can use it.
 
 After registration, shop owners can **add their shop's products**, manage inventory, track customer orders, monitor payments, handle returns, and view sales reports from a single dashboard.
 
